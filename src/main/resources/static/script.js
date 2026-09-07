@@ -1046,6 +1046,9 @@ async function findSlots() {
             );
         }
 
+        if (window.umami) {
+            umami.track("find-slots-success");
+        }
 
         renderResults(data);
 
