@@ -1,6 +1,5 @@
 /* =========================================================
    TIME ZONE ROULETTE
-   Final Frontend JavaScript
    ========================================================= */
 
 
@@ -15,7 +14,6 @@ const API_URL =
         : "/api/v1/time-slots/search";
 
 const MAX_PARTICIPANTS = 5;
-
 
 /* =========================================================
    TIMEZONE DATA
@@ -107,25 +105,17 @@ const durationInput =
 const formError =
     document.getElementById("formError");
 
-
 /* =========================================================
    INIT
    ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
-
     setMinimumDate();
-
     populateAllTimezones();
-
     setupParticipantEvents();
-
     detectBrowserTimezone();
-
     updateParticipantNumbers();
-
     updateAddButton();
-
 });
 
 
@@ -134,120 +124,86 @@ document.addEventListener("DOMContentLoaded", () => {
    ========================================================= */
 
 function setMinimumDate() {
-
     const today =
         getLocalDateString();
-
     dateInput.min = today;
-
     if (!dateInput.value) {
         dateInput.value = today;
     }
 }
 
-
 function getLocalDateString() {
-
     const now = new Date();
-
     const year =
         now.getFullYear();
-
     const month =
         String(now.getMonth() + 1)
             .padStart(2, "0");
-
     const day =
         String(now.getDate())
             .padStart(2, "0");
-
     return `${year}-${month}-${day}`;
 }
-
 
 /* =========================================================
    TIMEZONE SELECTORS
    ========================================================= */
 
 function populateAllTimezones() {
-
     const selects =
         document.querySelectorAll(".timezone");
-
     selects.forEach(select => {
         populateTimezoneSelect(select);
     });
 }
 
-
 function populateTimezoneSelect(select) {
-
     const currentValue =
         select.value;
-
     select.innerHTML = "";
-
     const placeholder =
         document.createElement("option");
-
     placeholder.value = "";
     placeholder.textContent =
         "Select timezone";
-
     select.appendChild(placeholder);
 
-
     TIMEZONES.forEach(timeZone => {
-
         const option =
             document.createElement("option");
-
         option.value =
             timeZone;
-
         option.textContent =
             formatTimezoneName(timeZone);
-
         select.appendChild(option);
-
     });
-
 
     if (currentValue) {
         select.value = currentValue;
     }
 }
 
-
 /* =========================================================
    TIMEZONE DISPLAY
    ========================================================= */
 
 function formatTimezoneName(timeZone) {
-
     const parts =
         timeZone.split("/");
-
     const region =
         parts[0];
-
     const city =
         parts
             .slice(1)
             .join(" / ")
             .replaceAll("_", " ");
-
     return `${region} · ${city}`;
 }
 
-
 function getTimezoneOffset(timeZone) {
-
     try {
-
         const date =
             new Date();
-
         const parts =
             new Intl.DateTimeFormat(
                 "en-US",
@@ -266,7 +222,6 @@ function getTimezoneOffset(timeZone) {
         if (!offsetPart) {
             return "UTC";
         }
-
         return offsetPart.value
             .replace("GMT", "UTC");
 
@@ -275,37 +230,28 @@ function getTimezoneOffset(timeZone) {
     }
 }
 
-
 function updateTimezoneInfo(participant) {
-
     const select =
         participant.querySelector(".timezone");
-
     const info =
         participant.querySelector(".timezone-info");
-
     if (!select.value) {
-
         info.textContent =
             "Select a timezone";
-
         return;
     }
 
     const offset =
         getTimezoneOffset(select.value);
-
     info.textContent =
         `${offset} · ${formatTimezoneName(select.value)}`;
 }
-
 
 /* =========================================================
    AUTO DETECT BROWSER TIMEZONE
    ========================================================= */
 
 function detectBrowserTimezone() {
-
     const firstParticipant =
         participantsContainer
             .querySelector(".participant");
@@ -323,7 +269,6 @@ function detectBrowserTimezone() {
     }
 
     try {
-
         const detectedTimezone =
             Intl.DateTimeFormat()
                 .resolvedOptions()
@@ -333,14 +278,11 @@ function detectBrowserTimezone() {
             detectedTimezone &&
             TIMEZONES.includes(detectedTimezone)
         ) {
-
             select.value =
                 detectedTimezone;
-
             updateTimezoneInfo(
                 firstParticipant
             );
-
             updateTimeline(
                 firstParticipant
             );
@@ -357,7 +299,6 @@ function detectBrowserTimezone() {
    ========================================================= */
 
 function setupParticipantEvents() {
-
     participantsContainer
         .addEventListener(
             "input",
@@ -371,9 +312,7 @@ function setupParticipantEvents() {
         );
 }
 
-
 function handleParticipantInput(event) {
-
     const participant =
         event.target.closest(".participant");
 
@@ -401,7 +340,6 @@ function handleParticipantInput(event) {
 
 
 function handleParticipantChange(event) {
-
     const participant =
         event.target.closest(".participant");
 
@@ -414,7 +352,6 @@ function handleParticipantChange(event) {
             "timezone"
         )
     ) {
-
         updateTimezoneInfo(
             participant
         );
@@ -433,7 +370,6 @@ function handleParticipantChange(event) {
             "end-hour"
         )
     ) {
-
         updateTimeline(participant);
     }
 }
@@ -449,9 +385,7 @@ addParticipantButton
         addParticipant
     );
 
-
 function addParticipant() {
-
     const count =
         participantsContainer
             .querySelectorAll(".participant")
@@ -472,7 +406,6 @@ function addParticipant() {
     );
 
     updateParticipantNumbers();
-
     updateAddButton();
 
     participant
@@ -487,7 +420,6 @@ function addParticipant() {
 
 
 function createParticipant(number) {
-
     const wrapper =
         document.createElement("div");
 
@@ -495,37 +427,25 @@ function createParticipant(number) {
         "participant";
 
     wrapper.innerHTML = `
-
         <div class="participant-header">
-
             <div class="participant-title">
-
                 <span class="participant-index">
                     ${String(number).padStart(2, "0")}
                 </span>
-
                 <div>
-
                     <h3>
                         Participant ${number}
                     </h3>
-
                     <span class="participant-subtitle">
                         Add their timezone
                     </span>
-
                 </div>
-
             </div>
-
         </div>
 
-
         <div class="form-grid">
-
             <label>
                 Name
-
                 <input
                     type="text"
                     class="name"
@@ -535,45 +455,34 @@ function createParticipant(number) {
                 >
             </label>
 
-
             <label>
                 Time zone
-
                 <select class="timezone">
                     <option value="">
                         Select timezone
                     </option>
                 </select>
-
                 <span class="timezone-info">
                     Select a timezone
                 </span>
-
             </label>
-
         </div>
 
 
         <div class="availability">
-
             <div class="availability-heading">
-
                 <span class="availability-title">
                     Available
                 </span>
-
                 <span class="availability-description">
                     When can they meet?
                 </span>
-
             </div>
 
 
             <div class="time-inputs">
-
                 <label>
                     From
-
                     <input
                         type="number"
                         class="start-hour"
@@ -590,7 +499,6 @@ function createParticipant(number) {
 
                 <label>
                     Until
-
                     <input
                         type="number"
                         class="end-hour"
@@ -600,14 +508,11 @@ function createParticipant(number) {
                         value="22"
                     >
                 </label>
-
             </div>
-
         </div>
 
 
         <div class="timeline">
-
             <div class="timeline-labels">
                 <span>00</span>
                 <span>06</span>
@@ -617,32 +522,24 @@ function createParticipant(number) {
             </div>
 
             <div class="timeline-track">
-
                 <div class="timeline-available"></div>
-
             </div>
-
         </div>
-
     `;
-
     return wrapper;
 }
-
 
 /* =========================================================
    PARTICIPANT NUMBERS
    ========================================================= */
 
 function updateParticipantNumbers() {
-
     const participants =
         participantsContainer
             .querySelectorAll(".participant");
 
     participants.forEach(
         (participant, index) => {
-
             const number =
                 index + 1;
 
@@ -672,7 +569,6 @@ function updateParticipantNumbers() {
 
 
 function updateParticipantSubtitle(participant) {
-
     const name =
         participant
             .querySelector(".name")
@@ -689,27 +585,22 @@ function updateParticipantSubtitle(participant) {
             .value;
 
     if (name && timezone) {
-
         subtitle.textContent =
             `${formatTimezoneName(timezone)}`;
 
     } else if (name) {
-
         subtitle.textContent =
             "Add their timezone";
 
     } else if (timezone) {
-
         subtitle.textContent =
             `${formatTimezoneName(timezone)}`;
 
     } else {
-
         subtitle.textContent =
             "Add your timezone";
     }
 }
-
 
 /* =========================================================
    ADD BUTTON STATE
@@ -723,7 +614,6 @@ function updateAddButton() {
             .length;
 
     if (count >= MAX_PARTICIPANTS) {
-
         addParticipantButton
             .classList.add("hidden");
 
@@ -740,7 +630,6 @@ function updateAddButton() {
    ========================================================= */
 
 function updateTimeline(participant) {
-
     const startInput =
         participant
             .querySelector(".start-hour");
@@ -768,18 +657,15 @@ function updateTimeline(participant) {
 
     start =
         Math.max(0, Math.min(23, start));
-
     end =
         Math.max(0, Math.min(24, end));
 
     if (end <= start) {
-
         timeline.style.left =
             `${(start / 24) * 100}%`;
 
         timeline.style.width =
             "0%";
-
         return;
     }
 
@@ -802,9 +688,7 @@ function updateTimeline(participant) {
    ========================================================= */
 
 function validateForm() {
-
     clearError();
-
     const participantElements =
         Array.from(
             participantsContainer
@@ -814,21 +698,17 @@ function validateForm() {
     if (
         participantElements.length < 2
     ) {
-
         showError(
             "Please add at least 2 people."
         );
-
         return false;
     }
-
 
     for (
         let i = 0;
         i < participantElements.length;
         i++
     ) {
-
         const participant =
             participantElements[i];
 
@@ -860,9 +740,7 @@ function validateForm() {
                     .value
             );
 
-
         if (!name) {
-
             showError(
                 `Please enter a name for participant ${number}.`
             );
@@ -876,7 +754,6 @@ function validateForm() {
 
 
         if (!timezone) {
-
             showError(
                 `Please select a timezone for ${name}.`
             );
@@ -898,7 +775,6 @@ function validateForm() {
             end > 23 ||
             start >= end
         ) {
-
             showError(
                 `${name}'s availability must have a valid start and end time.`
             );
@@ -909,7 +785,6 @@ function validateForm() {
 
 
     if (!dateInput.value) {
-
         showError(
             "Please choose a meeting date."
         );
@@ -944,7 +819,6 @@ function validateForm() {
         duration > 240 ||
         duration % 15 !== 0
     ) {
-
         showError(
             "Please select a valid meeting duration."
         );
@@ -961,7 +835,6 @@ function validateForm() {
    ========================================================= */
 
 function showError(message) {
-
     formError.textContent =
         message;
 
@@ -972,7 +845,6 @@ function showError(message) {
 
 
 function clearError() {
-
     formError.textContent = "";
 
     formError.classList.add(
@@ -993,7 +865,6 @@ findSlotsButton
 
 
 async function findSlots() {
-
     if (!validateForm()) {
         return;
     }
@@ -1007,7 +878,6 @@ async function findSlots() {
     slotList.innerHTML = "";
 
     try {
-
         const requestBody =
             buildRequest();
 
@@ -1040,7 +910,6 @@ async function findSlots() {
 
 
         if (!response.ok) {
-
             throw new Error(
                 getApiErrorMessage(data)
             );
@@ -1053,7 +922,6 @@ async function findSlots() {
         renderResults(data);
 
     } catch (error) {
-
         console.error(error);
 
         showError(
@@ -1062,7 +930,6 @@ async function findSlots() {
         );
 
     } finally {
-
         setLoading(false);
     }
 }
@@ -1073,7 +940,6 @@ async function findSlots() {
    ========================================================= */
 
 function buildRequest() {
-
     const participantElements =
         Array.from(
             participantsContainer
@@ -1084,7 +950,6 @@ function buildRequest() {
     const participants =
         participantElements.map(
             participant => {
-
                 return {
                     name:
                         participant
@@ -1129,7 +994,6 @@ function buildRequest() {
    ========================================================= */
 
 function getApiErrorMessage(data) {
-
     if (!data) {
         return "The server returned an unexpected response.";
     }
@@ -1139,7 +1003,6 @@ function getApiErrorMessage(data) {
     }
 
     if (data.errors) {
-
         const messages =
             Object.values(data.errors);
 
@@ -1157,7 +1020,6 @@ function getApiErrorMessage(data) {
    ========================================================= */
 
 function setLoading(isLoading) {
-
     findSlotsButton.disabled =
         isLoading;
 
@@ -1170,7 +1032,6 @@ function setLoading(isLoading) {
             .querySelector(".find-button-arrow");
 
     if (isLoading) {
-
         text.textContent =
             "Finding the sweet spot…";
 
@@ -1178,7 +1039,6 @@ function setLoading(isLoading) {
             "·";
 
     } else {
-
         text.textContent =
             "Find the sweet spot";
 
@@ -1193,7 +1053,6 @@ function setLoading(isLoading) {
    ========================================================= */
 
 function renderResults(data) {
-
     results.classList.remove(
         "hidden"
     );
@@ -1202,18 +1061,13 @@ function renderResults(data) {
         data.bestSlots || [];
 
     if (!slots.length) {
-
         slotList.innerHTML = `
-
             <div class="no-results">
-
                 No overlap found.
-
                 <div class="no-results-small">
                     Try widening everyone's availability
                     or choosing another date.
                 </div>
-
             </div>
 
         `;
@@ -1369,7 +1223,6 @@ function renderParticipantTime(
         participant.start &&
         participant.end
     ) {
-
         start =
             new Date(participant.start);
 
@@ -1377,7 +1230,6 @@ function renderParticipantTime(
             new Date(participant.end);
 
     } else {
-
         start =
             fallbackStart;
 
@@ -1399,9 +1251,7 @@ function renderParticipantTime(
 
 
     return `
-
         <div class="local-time">
-
             <div class="local-time-name">
                 ${escapeHtml(
                     participant.name || "Participant"
@@ -1411,9 +1261,7 @@ function renderParticipantTime(
             <div class="local-time-value">
                 ${escapeHtml(time)}
             </div>
-
         </div>
-
     `;
 }
 
@@ -1423,7 +1271,6 @@ function renderParticipantTime(
    ========================================================= */
 
 function formatUtcTime(start, end) {
-
     const startText =
         new Intl.DateTimeFormat(
             "en-US",
@@ -1472,7 +1319,6 @@ function formatTimeForTimezone(
 ) {
 
     try {
-
         const formatter =
             new Intl.DateTimeFormat(
                 "en-US",
@@ -1485,9 +1331,7 @@ function formatTimeForTimezone(
             );
 
         return `${formatter.format(start)}–${formatter.format(end)}`;
-
     } catch {
-
         return "Time unavailable";
     }
 }
@@ -1498,7 +1342,6 @@ function formatTimeForTimezone(
    ========================================================= */
 
 function escapeHtml(value) {
-
     return String(value)
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
